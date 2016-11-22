@@ -57,6 +57,7 @@
         if (self.window == nil) return;
         
         // sectionheader停留解决
+        // 刷新时contentInset会被设为header高度加_scrollViewOriginalInset.top 这是如果往上滚动再松手 又会弹回来 header隐藏不了
         CGFloat insetT = - self.scrollView.mj_offsetY > _scrollViewOriginalInset.top ? - self.scrollView.mj_offsetY : _scrollViewOriginalInset.top;
         insetT = insetT > self.mj_h + _scrollViewOriginalInset.top ? self.mj_h + _scrollViewOriginalInset.top : insetT;
         self.scrollView.mj_insetT = insetT;
@@ -70,7 +71,7 @@
     
     // 当前的contentOffset
     CGFloat offsetY = self.scrollView.mj_offsetY;
-    // 头部控件刚好出现的offsetY
+    // 头部控件刚好出现的offsetY 逻辑上头部刚好出现
     CGFloat happenOffsetY = - self.scrollViewOriginalInset.top;
     
     // 如果是向上滚动到看不见头部控件，直接返回

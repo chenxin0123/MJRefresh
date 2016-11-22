@@ -30,7 +30,7 @@
 
 - (void)prepare
 {
-    // 基本属性
+    // 基本属性 宽度可变 左右边距不变
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.backgroundColor = [UIColor clearColor];
 }
@@ -44,6 +44,7 @@
 
 - (void)placeSubviews{}
 
+/// 即将添加到父视图或者即将从父视图移除都会调用
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {
     [super willMoveToSuperview:newSuperview];
@@ -55,14 +56,14 @@
     [self removeObservers];
     
     if (newSuperview) { // 新的父控件
-        // 设置宽度
+        // 设置宽度 宽度跟父视图一样高
         self.mj_w = newSuperview.mj_w;
         // 设置位置
         self.mj_x = 0;
         
         // 记录UIScrollView
         _scrollView = (UIScrollView *)newSuperview;
-        // 设置永远支持垂直弹簧效果
+        // 设置永远支持垂直弹簧效果 不然就无法下拉了
         _scrollView.alwaysBounceVertical = YES;
         // 记录UIScrollView最开始的contentInset
         _scrollViewOriginalInset = _scrollView.contentInset;
@@ -82,7 +83,8 @@
     }
 }
 
-#pragma mark - KVO监听
+#pragma mark - KVO监听 
+/// KVO scrollView的contentOffset contentSize panGestureRecognizer的state
 - (void)addObservers
 {
     NSKeyValueObservingOptions options = NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld;
@@ -224,6 +226,7 @@
 }
 
 #pragma mark - 内部方法
+/// 子类会调用这个方法
 - (void)executeRefreshingCallback
 {
     dispatch_async(dispatch_get_main_queue(), ^{

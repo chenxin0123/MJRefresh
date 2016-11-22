@@ -22,7 +22,7 @@ typedef NS_ENUM(NSInteger, MJRefreshState) {
     MJRefreshStatePulling,
     /** 正在刷新中的状态 */
     MJRefreshStateRefreshing,
-    /** 即将刷新的状态 */
+    /** 即将刷新的状态 用来预防view还没显示出来就调用了beginRefreshing 状态为MJRefreshStateWillRefresh时isRefreshing返回YES */
     MJRefreshStateWillRefresh,
     /** 所有数据加载完毕，没有更多的数据了 */
     MJRefreshStateNoMoreData
@@ -69,7 +69,7 @@ typedef void (^MJRefreshComponentEndRefreshingCompletionBlock)();
 - (void)endRefreshingWithCompletionBlock:(void (^)())completionBlock;
 /** 是否正在刷新 */
 - (BOOL)isRefreshing;
-/** 刷新状态 一般交给子类内部实现 */
+/** 刷新状态 一般交给子类内部实现 默认是普通状态 */
 @property (assign, nonatomic) MJRefreshState state;
 
 #pragma mark - 交给子类去访问
@@ -79,9 +79,9 @@ typedef void (^MJRefreshComponentEndRefreshingCompletionBlock)();
 @property (weak, nonatomic, readonly) UIScrollView *scrollView;
 
 #pragma mark - 交给子类们去实现
-/** 初始化 */
+/** 初始化 调用父类的initWithFrame之后 立即调用该方法 */
 - (void)prepare NS_REQUIRES_SUPER;
-/** 摆放子控件frame */
+/** 摆放子控件frame layoutSubviews中会先调用该方法 */
 - (void)placeSubviews NS_REQUIRES_SUPER;
 /** 当scrollView的contentOffset发生改变的时候调用 */
 - (void)scrollViewContentOffsetDidChange:(NSDictionary *)change NS_REQUIRES_SUPER;
